@@ -1,28 +1,42 @@
-# Multilingual Journal Web App - Phase 2
+# Multilingual Journal Web App - Phase 3
 
-A .NET Core Razor Pages application with Docker containerization support.
+A .NET Core Razor Pages application with internationalization (i18n) support.
 
-## 🎯 Phase 2: Dockerize It
+## 🎯 Phase 3: Add i18n Support
 
 This phase adds:
-- Docker containerization with multi-stage build
-- Docker Compose orchestration
-- Persistent SQLite database with volume mounting
-- Production-ready container configuration
+- .NET Core localization with .resx resource files
+- Multi-language UI support (English, Spanish, French, German, Italian)
+- Language switcher component
+- Culture-based content localization
+- Persistent language preferences with cookies
 
 ## 🚀 Features
 
 - **📝 Journal Management**: Create, read, update, and delete personal journal entries
 - **💾 SQLite Database**: Lightweight, file-based database with Entity Framework Core
 - **🐳 Docker Support**: Fully containerized application with persistent data
+- **🌍 Multilingual UI**: Switch interface language between 5 supported languages
 - **🎨 Bootstrap UI**: Responsive web interface with modern design
 
 ## 🏗️ Architecture
 
 - **Frontend**: ASP.NET Core Razor Pages with Bootstrap 5
 - **Backend**: Entity Framework Core with SQLite
+- **Localization**: .resx resource files with built-in .NET localization
 - **Containerization**: Docker with volume mounting for database persistence
 - **Database**: Persistent SQLite with Docker volumes
+
+## 🌍 Language Support
+
+The application supports the following languages:
+- 🇺🇸 **English** (en) - Default
+- 🇪🇸 **Spanish** (es) - Español  
+- 🇫🇷 **French** (fr) - Français
+- 🇩🇪 **German** (de) - Deutsch
+- 🇮🇹 **Italian** (it) - Italiano
+
+Switch languages using the globe dropdown in the navigation bar.
 
 ## 🚀 Getting Started
 
@@ -52,20 +66,12 @@ dotnet run
 open https://localhost:7139
 ```
 
-## 🐳 Docker Configuration
+## 🎨 UI Components
 
-### Dockerfile Features
-- Multi-stage build for optimized image size
-- ASP.NET Core 8.0 runtime
-- Persistent data directory at `/app/data`
-- Environment variable configuration
-
-### Docker Compose Features
-- Service orchestration
-- Volume mounting for database persistence
-- Port mapping (5000:80)
-- Development environment configuration
-- Automatic restart policy
+- **Navigation**: Bootstrap navbar with language switcher
+- **Language Switcher**: Dropdown with native language names
+- **Localized Labels**: All UI text translated using `@Localizer["key"]` syntax
+- **Responsive Design**: Mobile-friendly interface
 
 ## 📊 Database Schema
 
@@ -84,16 +90,47 @@ open https://localhost:7139
 - **Local**: `Data Source=journal.db`
 - **Docker**: `Data Source=/app/data/journal.db`
 
+### Supported Cultures
+Configured in `Program.cs`:
+```csharp
+var supportedCultures = new[] { "en", "es", "fr", "de", "it" };
+```
+
+## 🌐 Localization Architecture
+
+### Resource Files
+- `SharedResource.en.resx` - English (default)
+- `SharedResource.es.resx` - Spanish
+- `SharedResource.fr.resx` - French
+- `SharedResource.de.resx` - German
+- `SharedResource.it.resx` - Italian
+
+### Usage in Razor Pages
+```csharp
+@inject IStringLocalizer<SharedResource> Localizer
+<h1>@Localizer["Welcome"]</h1>
+```
+
+### Language Switching
+- Cookie-based persistence
+- Automatic culture detection
+- Fallback to default language
+
 ## 🎓 Learning Objectives
 
 This phase teaches:
-- **Docker containerization** concepts and best practices
-- **Multi-stage builds** for production optimization
-- **Volume mounting** for data persistence
-- **Docker Compose** orchestration
-- **Environment configuration** for different deployment scenarios
+- **.NET Core localization** setup and configuration
+- **Resource file (.resx)** management and structure
+- **Culture switching** with middleware
+- **Localization best practices** for web applications
+- **Cookie-based persistence** for user preferences
 
 ## 🐛 Troubleshooting
+
+### Localization Issues
+- Ensure resource files are embedded resources
+- Check culture configuration in Program.cs
+- Verify SharedResource class exists
 
 ### Docker Issues
 ```bash
@@ -104,7 +141,7 @@ docker-compose up --build
 
 ## 🔮 Next Phase
 
-Phase 3 will add internationalization (i18n) support with multiple languages.
+Phase 4 will add AI-powered translation utility for automated resource generation.
 
 ---
 
