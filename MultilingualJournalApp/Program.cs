@@ -7,20 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<JournalContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add localization services
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.AddRazorPages()
-    .AddViewLocalization()
-    .AddDataAnnotationsLocalization();
-
-// Configure supported cultures
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[] { "en", "es", "fr", "de", "it" };
-    options.SetDefaultCulture(supportedCultures[0])
-        .AddSupportedCultures(supportedCultures)
-        .AddSupportedUICultures(supportedCultures);
-});
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -41,9 +28,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-// Add request localization middleware
-app.UseRequestLocalization();
 
 app.UseRouting();
 

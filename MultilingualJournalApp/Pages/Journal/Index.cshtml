@@ -1,9 +1,7 @@
 @page
 @model MultilingualJournalApp.Pages.Journal.IndexModel
-@using Microsoft.Extensions.Localization
-@inject IStringLocalizer<MultilingualJournalApp.Services.SharedResource> Localizer
 @{
-    ViewData["Title"] = Localizer["MyJournal"];
+    ViewData["Title"] = "My Journal";
 }
 
 <div class="container">
@@ -12,7 +10,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="display-4">@ViewData["Title"]</h1>
                 <a asp-page="./Create" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> @Localizer["NewEntry"]
+                    <i class="fas fa-plus"></i> New Entry
                 </a>
             </div>
 
@@ -34,9 +32,9 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small class="text-muted">@entry.CreatedDate.ToString("MMM dd, yyyy")</small>
                                         <div class="btn-group btn-group-sm">
-                                            <a asp-page="./Details" asp-route-id="@entry.Id" class="btn btn-outline-primary">@Localizer["View"]</a>
-                                            <a asp-page="./Edit" asp-route-id="@entry.Id" class="btn btn-outline-secondary">@Localizer["Edit"]</a>
-                                            <a asp-page="./Delete" asp-route-id="@entry.Id" class="btn btn-outline-danger">@Localizer["Delete"]</a>
+                                            <a asp-page="./Details" asp-route-id="@entry.Id" class="btn btn-outline-primary">View</a>
+                                            <a asp-page="./Edit" asp-route-id="@entry.Id" class="btn btn-outline-secondary">Edit</a>
+                                            <a asp-page="./Delete" asp-route-id="@entry.Id" class="btn btn-outline-danger">Delete</a>
                                         </div>
                                     </div>
                                 </div>
@@ -51,10 +49,10 @@
                     <div class="mb-4">
                         <i class="fas fa-book-open fa-5x text-muted"></i>
                     </div>
-                    <h3 class="text-muted">@Localizer["NoEntriesYet"]</h3>
-                    <p class="lead text-muted">@Localizer["StartWriting"]</p>
+                    <h3 class="text-muted">No journal entries yet</h3>
+                    <p class="lead text-muted">Start writing your thoughts and experiences!</p>
                     <a asp-page="./Create" class="btn btn-primary btn-lg">
-                        <i class="fas fa-plus"></i> @Localizer["CreateFirstEntry"]
+                        <i class="fas fa-plus"></i> Create Your First Entry
                     </a>
                 </div>
             }
