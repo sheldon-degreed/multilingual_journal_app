@@ -1,0 +1,63 @@
+@page
+@model MultilingualJournalApp.Pages.Journal.IndexModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<MultilingualJournalApp.Services.SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["MyJournal"];
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-4">@ViewData["Title"]</h1>
+                <a asp-page="./Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> @Localizer["NewEntry"]
+                </a>
+            </div>
+
+            @if (Model.JournalEntries?.Any() == true)
+            {
+                <div class="row">
+                    @foreach (var entry in Model.JournalEntries)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title">@entry.Title</h5>
+                                        <small class="text-muted">@entry.Language.ToUpper()</small>
+                                    </div>
+                                    <p class="card-text">
+                                        @(entry.Content.Length > 100 ? entry.Content.Substring(0, 100) + "..." : entry.Content)
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">@entry.CreatedDate.ToString("MMM dd, yyyy")</small>
+                                        <div class="btn-group btn-group-sm">
+                                            <a asp-page="./Details" asp-route-id="@entry.Id" class="btn btn-outline-primary">@Localizer["View"]</a>
+                                            <a asp-page="./Edit" asp-route-id="@entry.Id" class="btn btn-outline-secondary">@Localizer["Edit"]</a>
+                                            <a asp-page="./Delete" asp-route-id="@entry.Id" class="btn btn-outline-danger">@Localizer["Delete"]</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-book-open fa-5x text-muted"></i>
+                    </div>
+                    <h3 class="text-muted">@Localizer["NoEntriesYet"]</h3>
+                    <p class="lead text-muted">@Localizer["StartWriting"]</p>
+                    <a asp-page="./Create" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus"></i> @Localizer["CreateFirstEntry"]
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

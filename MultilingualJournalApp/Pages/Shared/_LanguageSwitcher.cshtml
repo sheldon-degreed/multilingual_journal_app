@@ -1,0 +1,48 @@
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Options
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures
+        ?.Select(c => new SelectListItem { Value = c.Name, Text = GetLanguageName(c.Name) })
+        .ToList();
+}
+
+<div class="dropdown">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-globe"></i> @GetLanguageName(requestCulture.RequestCulture.UICulture.Name)
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+        @if (cultureItems != null)
+        {
+            @foreach (var culture in cultureItems)
+            {
+                <li>
+                    <form asp-page="/SetLanguage" method="post" class="d-inline">
+                        <input type="hidden" name="culture" value="@culture.Value" />
+                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                        <button type="submit" class="dropdown-item @(culture.Value == requestCulture.RequestCulture.UICulture.Name ? "active" : "")">
+                            @culture.Text
+                        </button>
+                    </form>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+@functions {
+    private string GetLanguageName(string culture)
+    {
+        return culture switch
+        {
+            "en" => "English",
+            "es" => "Español",
+            "fr" => "Français",
+            "de" => "Deutsch",
+            "it" => "Italiano",
+            _ => culture
+        };
+    }
+}

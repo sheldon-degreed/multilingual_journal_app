@@ -1,0 +1,54 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Multilingual Journal";
+}
+
+<div class="container">
+    <div class="text-center py-5">
+        <h1 class="display-3 mb-4">
+            <i class="fas fa-book-open text-primary"></i>
+            Multilingual Journal
+        </h1>
+        <p class="lead mb-4">
+            Write, reflect, and preserve your thoughts in any language.
+        </p>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+                        <h5>Write Freely</h5>
+                        <p class="text-muted">Express your thoughts in multiple languages with an intuitive interface.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-globe fa-3x text-success mb-3"></i>
+                        <h5>Multilingual</h5>
+                        <p class="text-muted">Support for English, Spanish, French, German, and Italian.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-history fa-3x text-info mb-3"></i>
+                        <h5>Track Progress</h5>
+                        <p class="text-muted">View and organize your journal entries over time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a asp-page="/Journal/Index" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-book"></i> View Your Journal
+            </a>
+            <a asp-page="/Journal/Create" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-plus"></i> Create New Entry
+            </a>
+        </div>
+    </div>
+</div>
