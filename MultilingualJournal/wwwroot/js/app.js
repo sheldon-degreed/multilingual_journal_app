@@ -225,9 +225,15 @@ async function searchEntries() {
 // Load tags
 async function loadTags() {
     try {
-        const response = await fetch(`${API_BASE}/tag`);
-        const tags = await response.json();
-        displayTags(tags);
+        const [tagsResponse, gitTagsResponse] = await Promise.all([
+            fetch(`${API_BASE}/tag`),
+            fetch(`${API_BASE}/tag/git-tags`)
+        ]);
+        
+        const tags = await tagsResponse.json();
+        const gitTags = await gitTagsResponse.json();
+        
+        displayTags(tags, gitTags);
     } catch (error) {
         console.error('Error loading tags:', error);
         showError('Failed to load tags');
@@ -235,19 +241,27 @@ async function loadTags() {
 }
 
 // Display tags
-function displayTags(tags) {
+function displayTags(tags, gitTags = []) {
     const milestones = tags.filter(t => t.isMilestone);
     const regular = tags.filter(t => !t.isMilestone);
 
     document.getElementById('milestone-tags').innerHTML = milestones.length > 0 ? 
-        milestones.map(tag => `
-            <div class="card mb-2">
-                <div class="card-body">
-                    <span class="badge tag-milestone">${escapeHtml(tag.name)}</span>
-                    <small class="text-muted">(${tag.journalEntries ? tag.journalEntries.length : 0} entries)</small>
+        milestones.map(tag => {
+            const gitTagName = `milestone-${tag.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+            const hasGitTag = gitTags.includes(gitTagName);
+            return `
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <span class="badge tag-milestone">${escapeHtml(tag.name)}</span>
+                        <small class="text-muted">(${tag.journalEntries ? tag.journalEntries.length : 0} entries)</small>
+                        ${hasGitTag ? '<span class="badge bg-success ms-2" title="Git tag created">📋 Git Tagged</span>' : ''}
+                        <div class="mt-1">
+                            <small class="text-muted">Created: ${formatDate(tag.createdAt)}</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        `).join('') : '<p class="text-muted">No milestone tags yet.</p>';
+            `;
+        }).join('') : '<p class="text-muted">No milestone tags yet.</p>';
 
     document.getElementById('regular-tags').innerHTML = regular.length > 0 ? 
         regular.map(tag => `
@@ -255,9 +269,30 @@ function displayTags(tags) {
                 <div class="card-body">
                     <span class="badge tag-regular">${escapeHtml(tag.name)}</span>
                     <small class="text-muted">(${tag.journalEntries ? tag.journalEntries.length : 0} entries)</small>
+                    <div class="mt-1">
+                        <small class="text-muted">Created: ${formatDate(tag.createdAt)}</small>
+                    </div>
                 </div>
             </div>
         `).join('') : '<p class="text-muted">No regular tags yet.</p>';
+
+    // Display Git tags section
+    if (gitTags.length > 0) {
+        const gitTagsSection = `
+            <div class="mt-4">
+                <h5>Git Development Tags</h5>
+                <div class="alert alert-info">
+                    <small><strong>Info:</strong> These are Git tags automatically created for milestone achievements.</small>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    ${gitTags.map(gitTag => `
+                        <span class="badge bg-secondary">${escapeHtml(gitTag)}</span>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        document.getElementById('milestone-tags').innerHTML += gitTagsSection;
+    }
 }
 
 // Utility functions

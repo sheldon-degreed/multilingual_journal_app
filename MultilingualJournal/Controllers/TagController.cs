@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MultilingualJournal.Data;
 using MultilingualJournal.Models;
+using MultilingualJournal.Services;
 
 namespace MultilingualJournal.Controllers
 {
@@ -10,10 +11,14 @@ namespace MultilingualJournal.Controllers
     public class TagController : ControllerBase
     {
         private readonly JournalContext _context;
+        private readonly IGitService _gitService;
+        private readonly ILogger<TagController> _logger;
 
-        public TagController(JournalContext context)
+        public TagController(JournalContext context, IGitService gitService, ILogger<TagController> logger)
         {
             _context = context;
+            _gitService = gitService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -60,6 +65,24 @@ namespace MultilingualJournal.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                
+                // Create Git tag for milestone tags
+                if (tag.IsMilestone)
+                {
+                    var gitTagCreated = await _gitService.CreateMilestoneTagAsync(
+                        tag.Name, 
+                        $"Milestone tag created: {tag.Name}"
+                    );
+                    
+                    if (gitTagCreated)
+                    {
+                        _logger.LogInformation("Git tag created for milestone: {TagName}", tag.Name);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Failed to create Git tag for milestone: {TagName}", tag.Name);
+                    }
+                }
             }
             catch (DbUpdateException)
             {
@@ -114,10 +137,36 @@ namespace MultilingualJournal.Controllers
                 return NotFound();
             }
 
+            // Delete Git tag if it's a milestone
+            if (tag.IsMilestone)
+            {
+                var gitTagDeleted = await _gitService.DeleteTagAsync(tag.Name);
+                if (gitTagDeleted)
+                {
+                    _logger.LogInformation("Git tag deleted for milestone: {TagName}", tag.Name);
+                }
+                else
+                {
+                    _logger.LogWarning("Failed to delete Git tag for milestone: {TagName}", tag.Name);
+                }
+            }
+
             _context.Tags.Remove(tag);
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("git-tags")]
+        public async Task<ActionResult<IEnumerable<string>>> GetGitTags()
+        {
+            if (!_gitService.IsGitRepositoryInitialized())
+            {
+                return Ok(new List<string>());
+            }
+
+            var gitTags = await _gitService.GetAllTagsAsync();
+            return Ok(gitTags);
         }
 
         private bool TagExists(int id)
