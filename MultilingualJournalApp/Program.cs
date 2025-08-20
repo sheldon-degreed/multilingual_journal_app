@@ -7,8 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<JournalContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddSingleton<SharedResourceService>();
-
 // Add localization services
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.AddRazorPages()
