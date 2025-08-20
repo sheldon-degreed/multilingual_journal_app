@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="~/MultilingualJournalApp.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">
-                    <i class="fas fa-book-open"></i> Multilingual Journal
+                    <i class="fas fa-book-open"></i> @Localizer["MyJournal"]
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -24,17 +26,17 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">
-                                <i class="fas fa-home"></i> Home
+                                <i class="fas fa-home"></i> @Localizer["Home"]
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Journal/Index">
-                                <i class="fas fa-book"></i> My Journal
+                                <i class="fas fa-book"></i> @Localizer["MyJournal"]
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Journal/Create">
-                                <i class="fas fa-plus"></i> New Entry
+                                <i class="fas fa-plus"></i> @Localizer["NewEntry"]
                             </a>
                         </li>
                     </ul>
